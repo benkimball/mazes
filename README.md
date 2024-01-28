@@ -1,1 +1,1 @@
-![Screenshot of mazes project](file:///README.png)
+![Screenshot of mazes project](README.png)
