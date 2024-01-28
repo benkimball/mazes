@@ -1,0 +1,93 @@
+[gd_scene load_steps=5 format=3 uid="uid://0eh672wfokyj"]
+
+[ext_resource type="Script" path="res://scenes/maze_explorer.gd" id="1_mna0x"]
+[ext_resource type="Texture2D" uid="uid://bqqh1xu5hu62e" path="res://assets/updown.png" id="1_rnwn7"]
+[ext_resource type="PackedScene" uid="uid://db2e0dbanjurc" path="res://scenes/maze.tscn" id="2_lx0pu"]
+
+[sub_resource type="Theme" id="Theme_5u1yf"]
+Button/font_sizes/font_size = 96
+GridContainer/constants/h_separation = 48
+GridContainer/constants/v_separation = 48
+HBoxContainer/constants/separation = 96
+Label/font_sizes/font_size = 96
+LineEdit/font_sizes/font_size = 96
+OptionButton/font_sizes/font_size = 96
+PopupMenu/font_sizes/font_size = 96
+SpinBox/icons/updown = ExtResource("1_rnwn7")
+Tree/font_sizes/font_size = 96
+VBoxContainer/constants/separation = 48
+
+[node name="MazeExplorer" type="ColorRect"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_5u1yf")
+color = Color(0.2, 0.317647, 0.411765, 1)
+script = ExtResource("1_mna0x")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 64
+theme_override_constants/margin_right = 64
+theme_override_constants/margin_bottom = 64
+
+[node name="Layout" type="HBoxContainer" parent="Margin"]
+layout_mode = 2
+
+[node name="Maze" type="Control" parent="Margin/Layout"]
+custom_minimum_size = Vector2(1920, 1920)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Maze" parent="Margin/Layout/Maze" instance=ExtResource("2_lx0pu")]
+position = Vector2(2.08165e-12, 2.08165e-12)
+
+[node name="UIContainer" type="VBoxContainer" parent="Margin/Layout"]
+layout_mode = 2
+
+[node name="FormContainer" type="GridContainer" parent="Margin/Layout/UIContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="AlgorithmLabel" type="Label" parent="Margin/Layout/UIContainer/FormContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Algorithm"
+
+[node name="AlgorithmSelect" type="OptionButton" parent="Margin/Layout/UIContainer/FormContainer"]
+layout_mode = 2
+
+[node name="ColumnsLabel" type="Label" parent="Margin/Layout/UIContainer/FormContainer"]
+layout_mode = 2
+text = "Columns"
+
+[node name="NumCols" type="SpinBox" parent="Margin/Layout/UIContainer/FormContainer"]
+layout_mode = 2
+min_value = 1.0
+value = 10.0
+rounded = true
+
+[node name="RowsLabel" type="Label" parent="Margin/Layout/UIContainer/FormContainer"]
+layout_mode = 2
+text = "Rows"
+
+[node name="NumRows" type="SpinBox" parent="Margin/Layout/UIContainer/FormContainer"]
+layout_mode = 2
+min_value = 1.0
+value = 10.0
+rounded = true
+
+[node name="GenerateButton" type="Button" parent="Margin/Layout/UIContainer"]
+layout_mode = 2
+text = "Generate"
+
+[connection signal="pressed" from="Margin/Layout/UIContainer/GenerateButton" to="." method="_on_generate_button_pressed"]

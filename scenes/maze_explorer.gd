@@ -1,0 +1,29 @@
+class_name MazeExplorer
+extends ColorRect
+
+@onready var maze:Maze = $Margin/Layout/Maze/Maze
+@onready var algorithm_select:OptionButton = $Margin/Layout/UIContainer/FormContainer/AlgorithmSelect
+@onready var num_cols:SpinBox = $Margin/Layout/UIContainer/FormContainer/NumCols
+@onready var num_rows:SpinBox = $Margin/Layout/UIContainer/FormContainer/NumRows
+
+const MAX_MAZE_SIDE_F:float = 1920.0
+const MAZE_TILE_WIDTH:int = 128
+
+
+func _ready()->void:
+	algorithm_select.clear()
+	for alg:String in maze.get_algorithms():
+		algorithm_select.add_item(alg)
+	generate_maze(10, 10, "test")
+
+
+func generate_maze(cols:int, rows:int, algorithm:String)->void:
+	var fx = MAX_MAZE_SIDE_F / (cols * MAZE_TILE_WIDTH)
+	var fy = MAX_MAZE_SIDE_F / (rows * MAZE_TILE_WIDTH)
+	var scale:float = min(fx, fy)
+	maze.scale = Vector2(scale, scale)
+	maze.generate(cols, rows, algorithm)
+
+
+func _on_generate_button_pressed()->void:
+	generate_maze(round(num_cols.value), round(num_rows.value), algorithm_select.text)
