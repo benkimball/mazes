@@ -1,1 +1,1 @@
-![Screenshot of mazes project](file:///Users/zubin/code/mazes/README.png)
+![Screenshot of mazes project](file:///README.png)
