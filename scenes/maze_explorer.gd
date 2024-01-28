@@ -20,8 +20,7 @@ func _ready()->void:
 func generate_maze(cols:int, rows:int, algorithm:String)->void:
 	var fx = MAX_MAZE_SIDE_F / (cols * MAZE_TILE_WIDTH)
 	var fy = MAX_MAZE_SIDE_F / (rows * MAZE_TILE_WIDTH)
-	var scale:float = min(fx, fy)
-	maze.scale = Vector2(scale, scale)
+	maze.scale = Vector2(min(fx, fy), min(fx, fy))
 	maze.generate(cols, rows, algorithm)
 
 

@@ -5,6 +5,7 @@ var grid:Grid
 var algorithms:Dictionary = {
 	"test": generate_test_pattern,
 	"binary tree": generate_binary_tree,
+	"sidewinder": generate_sidewinder
 }
 
 func _ready() -> void:
@@ -41,7 +42,23 @@ func generate_binary_tree()->void:
 			c.link(neighbors.pick_random())
 	)
 
-
+func generate_sidewinder()->void:
+	grid.each_row(func (row:Array[Cell])->void:
+		var run:Array[Cell] = []
+		for cell:Cell in row:
+			run.append(cell)
+			var at_eastern_boundary:bool = not cell.east
+			var at_northern_boundary:bool = not cell.north
+			var should_close = at_eastern_boundary or (!at_northern_boundary && randi_range(0, 1) == 0)
+			if should_close:
+				var sample:Cell = run.pick_random()
+				sample.link(sample.north)
+				run.clear()
+			else:
+				cell.link(cell.east)
+	)
+	
+	
 func _draw()->void:
 	for rix:int in grid.rows:
 		for cix:int in grid.columns:
