@@ -1,64 +1,34 @@
 class_name Maze
 extends TileMap
 
+const GENDIR:String = "res://scripts/generators"
+
 var grid:Grid
-var algorithms:Dictionary = {
-	"test": generate_test_pattern,
-	"binary tree": generate_binary_tree,
-	"sidewinder": generate_sidewinder
-}
-
-func _ready() -> void:
-	generate(10, 10, "test")
+var generators:Dictionary = {}
 
 
-func generate(cols:int, rows:int, algorithm:String)->void:
-	assert(algorithms.has(algorithm))
+func _init()->void:
+	for file_name:String in DirAccess.get_files_at(GENDIR):
+		var Generator := load("%s/%s" % [GENDIR, file_name])
+		var instance = Generator.new()
+		if instance.include:
+			generators[instance.name] = instance
+
+
+func generate(cols:int, rows:int, generator_name:String)->void:
 	grid = Grid.new(rows, cols)
-	algorithms[algorithm].call()
+	var generator:BaseGenerator = generators[generator_name]
+	generator.apply(grid)
 	queue_redraw()
 
 
 func get_algorithms()->Array[String]:
 	var algs:Array[String] = []
-	for alg:String in algorithms.keys():
-		algs.append(alg)
+	for algorithm_name:String in generators.keys():
+		algs.append(algorithm_name)
 	return algs
 
 
-func generate_test_pattern()->void:
-	grid.each_cell(func(c:Cell)->void:
-		c.link(c.east)
-		c.link(c.south)
-	)
-
-
-func generate_binary_tree()->void:
-	grid.each_cell(func(c:Cell)->void:
-		var neighbors:Array[Cell] = []
-		if c.north: neighbors.append(c.north)
-		if c.east: neighbors.append(c.east)
-		if neighbors.size() > 0:
-			c.link(neighbors.pick_random())
-	)
-
-func generate_sidewinder()->void:
-	grid.each_row(func (row:Array[Cell])->void:
-		var run:Array[Cell] = []
-		for cell:Cell in row:
-			run.append(cell)
-			var at_eastern_boundary:bool = not cell.east
-			var at_northern_boundary:bool = not cell.north
-			var should_close = at_eastern_boundary or (!at_northern_boundary && randi_range(0, 1) == 0)
-			if should_close:
-				var sample:Cell = run.pick_random()
-				sample.link(sample.north)
-				run.clear()
-			else:
-				cell.link(cell.east)
-	)
-	
-	
 func _draw()->void:
 	for rix:int in grid.rows:
 		for cix:int in grid.columns:

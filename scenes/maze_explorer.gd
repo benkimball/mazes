@@ -12,14 +12,16 @@ const MAZE_TILE_WIDTH:int = 128
 
 func _ready()->void:
 	algorithm_select.clear()
-	for alg:String in maze.get_algorithms():
-		algorithm_select.add_item(alg)
-	generate_maze(10, 10, "test")
+	var algorithms:Array[String] = maze.get_algorithms()
+	if not algorithms.is_empty():
+		for alg:String in maze.get_algorithms():
+			algorithm_select.add_item(alg)
+		generate_maze(10, 10, algorithms.front())
 
 
 func generate_maze(cols:int, rows:int, algorithm:String)->void:
-	var fx = MAX_MAZE_SIDE_F / (cols * MAZE_TILE_WIDTH)
-	var fy = MAX_MAZE_SIDE_F / (rows * MAZE_TILE_WIDTH)
+	var fx:float = MAX_MAZE_SIDE_F / (cols * MAZE_TILE_WIDTH)
+	var fy:float = MAX_MAZE_SIDE_F / (rows * MAZE_TILE_WIDTH)
 	maze.scale = Vector2(min(fx, fy), min(fx, fy))
 	maze.generate(cols, rows, algorithm)
 
